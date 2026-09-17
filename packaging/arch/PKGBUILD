@@ -11,7 +11,7 @@ provides=('lxi-tools' 'lxi-tools-git')
 conflicts=('lxi-tools' 'lxi-tools-git')
 depends=('liblxi' 'lua53' 'gtk4>=4.5.0' 'gtksourceview5>=5.4.0' 'libadwaita')
 makedepends=('git' 'meson')
-source=("${_pkgsrc}::git+https://code.sw1nn.net/sw1nn/lxi-tools.git")
+source=("${_pkgsrc}::git+https://code.sw1nn.net/sw1nn/lxi-tools.git#branch=main")
 sha256sums=('SKIP')
 
 pkgver() {

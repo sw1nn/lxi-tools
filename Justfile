@@ -1,13 +1,13 @@
 default:
     @just --list
 
-# Refuse to package from any branch other than master.
-_assert-master:
+# Refuse to package from any branch other than main.
+_assert-main:
     #!/usr/bin/env bash
     set -euo pipefail
     branch=$(git branch --show-current)
-    if [ "$branch" != "master" ]; then
-        echo "ERROR: packaging can only be run from master (currently on '$branch')" >&2
+    if [ "$branch" != "main" ]; then
+        echo "ERROR: packaging can only be run from main (currently on '$branch')" >&2
         exit 1
     fi
 
@@ -19,7 +19,7 @@ build:
     meson compile -C build
 
 # Build the Arch package in a clean chroot and upload it.
-package: _assert-master
+package: _assert-main
     #!/usr/bin/env bash
     set -euo pipefail
     sw1nn-makepkg-chroot -C packaging/arch
