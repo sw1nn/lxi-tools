@@ -1275,6 +1275,8 @@ static gboolean gui_update_grab_screenshot_finished_thread(gpointer user_data)
         //loader = gdk_pixbuf_loader_new ();
         loader = gdk_pixbuf_loader_new_with_type(self->image_format, NULL);
         gdk_pixbuf_loader_write(loader, (const guchar *) self->image_buffer, (gsize)self->image_size, NULL);
+        // The loader only produces a pixbuf once it is closed
+        gdk_pixbuf_loader_close(loader, NULL);
         self->pixbuf_screenshot = gdk_pixbuf_loader_get_pixbuf (loader);
         if (self->pixbuf_screenshot == NULL)
         {
@@ -1289,7 +1291,6 @@ static gboolean gui_update_grab_screenshot_finished_thread(gpointer user_data)
             gtk_widget_set_halign(GTK_WIDGET(self->picture_screenshot), GTK_ALIGN_FILL);
             GdkTexture *texture = gdk_texture_new_for_pixbuf(self->pixbuf_screenshot);
             gtk_picture_set_paintable(self->picture_screenshot, GDK_PAINTABLE(texture));
-            gdk_pixbuf_loader_close(loader, NULL);
             g_object_unref(loader);
             g_object_unref(texture);
 
@@ -1338,6 +1339,8 @@ static gboolean gui_update_live_view_finished_thread(gpointer user_data)
     //loader = gdk_pixbuf_loader_new ();
     loader = gdk_pixbuf_loader_new_with_type(self->image_format, NULL);
     gdk_pixbuf_loader_write(loader, (const guchar *) self->image_buffer, (gsize)self->image_size, NULL);
+    // The loader only produces a pixbuf once it is closed
+    gdk_pixbuf_loader_close(loader, NULL);
     self->pixbuf_screenshot = gdk_pixbuf_loader_get_pixbuf (loader);
     if (self->pixbuf_screenshot == NULL)
     {
@@ -1352,7 +1355,6 @@ static gboolean gui_update_live_view_finished_thread(gpointer user_data)
         gtk_widget_set_halign(GTK_WIDGET(self->picture_screenshot), GTK_ALIGN_FILL);
         GdkTexture *texture = gdk_texture_new_for_pixbuf(self->pixbuf_screenshot);
         gtk_picture_set_paintable(self->picture_screenshot, GDK_PAINTABLE(texture));
-        gdk_pixbuf_loader_close(loader, NULL);
         g_object_unref(loader);
         g_object_unref(texture);
 
