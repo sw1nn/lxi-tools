@@ -368,6 +368,12 @@ int screenshot(char *address, char *plugin_name, char *filename,
     int i = 0;
 
     // Check parameters
+    if (address == NULL)
+    {
+        error_printf("Missing address\n");
+        return 1;
+    }
+
     if (strlen(address) == 0)
     {
         error_printf("Missing address\n");

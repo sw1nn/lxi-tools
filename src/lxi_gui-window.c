@@ -1397,9 +1397,13 @@ static gpointer live_view_worker_thread(gpointer data)
         return NULL;
 
     }
+    // Work on a private copy of the address. The main thread clears self->ip
+    // when the selected instrument is deselected or removed.
+    char *address = g_strdup(self->ip);
+
     self->plugin_name = NULL;
     g_mutex_lock(&self->mutex_connection);
-    self->plugin_name = screenshot_detect_plugin_name((char *)self->ip, timeout);
+    self->plugin_name = screenshot_detect_plugin_name(address, timeout);
     g_mutex_unlock(&self->mutex_connection);
     if(self->plugin_name == NULL)
     {
@@ -1408,6 +1412,7 @@ static gpointer live_view_worker_thread(gpointer data)
         gtk_toggle_button_set_active(self->toggle_button_search, false);
         gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_search), true);
         self->live_view_worker_thread = NULL;
+        g_free(address);
         return NULL;
     }
 
@@ -1420,7 +1425,7 @@ static gpointer live_view_worker_thread(gpointer data)
             g_mutex_unlock(&self->mutex_connection);
             break;
         }
-        status = screenshot((char *)self->ip, self->plugin_name, filename, timeout, false, self->image_buffer, &(self->image_size), self->image_format, self->image_filename);
+        status = screenshot(address, self->plugin_name, filename, timeout, false, self->image_buffer, &(self->image_size), self->image_format, self->image_filename);
         if (status != 0)
         {
             show_error(self, "Live view: Failed to grab screenshot");
@@ -1431,6 +1436,7 @@ static gpointer live_view_worker_thread(gpointer data)
             gtk_widget_set_sensitive(GTK_WIDGET(self->toggle_button_search), true);
             self->plugin_name = NULL;
 	    self->live_view_worker_thread = NULL;
+            g_free(address);
             return NULL;
         }
 
@@ -1438,6 +1444,7 @@ static gpointer live_view_worker_thread(gpointer data)
     }
 
     self->plugin_name = NULL;
+    g_free(address);
     g_free(self->image_buffer);
 
     restore_screenshot_buttons(self);
