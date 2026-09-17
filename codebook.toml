@@ -1,0 +1,16 @@
+[words]
+allowlist = [
+  "lxi",
+  "libadwaita",
+  "pixbuf",
+  "gdk",
+  "scpi",
+  "sw1nn",
+  "vxi",
+  "mdns",
+  "rigol",
+  "meson",
+  "makepkg",
+  "pkgver",
+  "pkgname",
+]

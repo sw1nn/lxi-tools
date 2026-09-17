@@ -1,0 +1,32 @@
+# Maintainer: Neale Swinnerton <neale@sw1nn.com>
+pkgname=sw1nn-lxi-tools-git
+_pkgsrc=lxi-tools
+pkgver=r0.0000000
+pkgrel=1
+pkgdesc="LXI Tools with sw1nn fixes for GUI screenshot/live view and screenshot plugin handling"
+arch=('x86_64')
+url="https://code.sw1nn.net/sw1nn/lxi-tools"
+license=('BSD-3-Clause')
+provides=('lxi-tools' 'lxi-tools-git')
+conflicts=('lxi-tools' 'lxi-tools-git')
+depends=('liblxi' 'lua53' 'gtk4>=4.5.0' 'gtksourceview5>=5.4.0' 'libadwaita')
+makedepends=('git' 'meson')
+source=("${_pkgsrc}::git+https://code.sw1nn.net/sw1nn/lxi-tools.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "${srcdir}/${_pkgsrc}"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd "${srcdir}/${_pkgsrc}"
+  arch-meson . build -Dgui=true --wrap-mode=nofallback
+  meson compile -C build
+}
+
+package() {
+  cd "${srcdir}/${_pkgsrc}"
+  meson install -C build --destdir "${pkgdir}"
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
