@@ -403,6 +403,11 @@ int screenshot(char *address, char *plugin_name, char *filename,
         i++;
     }
 
+    if ((i >= PLUGIN_LIST_SIZE_MAX) || (plugin_list[i] == NULL))
+    {
+        error_printf("Unknown plugin name (%s)\n", plugin_name);
+        return 1;
+    }
 
     // Call capture screenshot function
     return plugin_list[i]->screenshot(address, id, timeout);
