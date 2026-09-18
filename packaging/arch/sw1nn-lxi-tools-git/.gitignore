@@ -1,0 +1,6 @@
+src/
+pkg/
+lxi-tools/
+*.tar.zst
+*.tar.zst.sig
+*.log
