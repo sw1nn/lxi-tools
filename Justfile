@@ -28,3 +28,15 @@ package: _assert-main
     # known after the build has rewritten the PKGBUILD.
     pkgver=$(sed -n 's/^pkgver=//p' "$dir"/PKGBUILD)
     sw1nn-pkg-ctl upload "$dir"/*-"$pkgver"-*.pkg.tar.zst
+
+# Build and upload sw1nn-liblxi, which provides the liblxi dependency.
+package-liblxi: _assert-main
+    #!/usr/bin/env bash
+    set -euo pipefail
+    # liblxi is AUR-only upstream, so a clean chroot cannot resolve it until
+    # this package is in the sw1nn repo. Run this before `just package` on a
+    # fresh repo, and whenever the pinned liblxi version changes.
+    dir=packaging/arch/sw1nn-liblxi
+    sw1nn-makepkg-chroot -C "$dir"
+    pkgver=$(sed -n 's/^pkgver=//p' "$dir"/PKGBUILD)
+    sw1nn-pkg-ctl upload "$dir"/*-"$pkgver"-*.pkg.tar.zst

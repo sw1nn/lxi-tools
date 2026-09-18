@@ -1,0 +1,28 @@
+# Maintainer: Neale Swinnerton <neale@sw1nn.com>
+pkgname=sw1nn-liblxi
+_pkgsrc=liblxi
+pkgver=1.22
+pkgrel=1
+pkgdesc="Library for managing LXI compatible test instruments"
+arch=('x86_64')
+url="https://github.com/lxi-tools/liblxi"
+license=('BSD-3-Clause')
+provides=("liblxi=${pkgver}")
+conflicts=('liblxi' 'liblxi-git')
+depends=('avahi' 'libxml2' 'glibc')
+makedepends=('meson')
+# Checksum matches the liblxi-1.22.tar.xz.sha256sum published with the release.
+source=("https://github.com/lxi-tools/${_pkgsrc}/releases/download/v${pkgver}/${_pkgsrc}-${pkgver}.tar.xz")
+sha256sums=('14d46cc60f38998bccb6d6cda020048340bb9e0bc0afabbd77ff89b6bb05ccdb')
+
+build() {
+  cd "${srcdir}/${_pkgsrc}-${pkgver}"
+  arch-meson . build --wrap-mode=nofallback
+  meson compile -C build
+}
+
+package() {
+  cd "${srcdir}/${_pkgsrc}-${pkgver}"
+  meson install -C build --destdir "${pkgdir}"
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
