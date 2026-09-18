@@ -9,7 +9,21 @@ url="https://code.sw1nn.net/sw1nn/lxi-tools"
 license=('BSD-3-Clause')
 provides=('lxi-tools' 'lxi-tools-git')
 conflicts=('lxi-tools' 'lxi-tools-git')
-depends=('liblxi' 'lua53' 'gtk4>=4.5.0' 'gtksourceview5>=5.4.0' 'libadwaita')
+# Mirrors the dependency() / find_library() calls in src/meson.build. The build
+# passes --wrap-mode=nofallback, so the subprojects/*.wrap fallbacks never apply
+# and every one of these must come from a system package.
+depends=(
+  'liblxi>=1.13'
+  'lua53'
+  'readline'
+  'glib2>=2.74'
+  'gtk4>=4.6.0'
+  'cairo'
+  'gdk-pixbuf2'
+  'gtksourceview5>=5.4.0'
+  'libadwaita>=1.2'
+  'json-glib>=1.4'
+)
 makedepends=('git' 'meson')
 source=("${_pkgsrc}::git+https://code.sw1nn.net/sw1nn/lxi-tools.git#branch=main")
 sha256sums=('SKIP')
